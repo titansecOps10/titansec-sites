@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TitanSEC — Victory</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap');
+
+  :root {
+    --bg: #12141c;
+    --surface: #1a1d29;
+    --surface-2: #202430;
+    --border: #2b3040;
+    --text: #ede8de;
+    --text-muted: #8a90a3;
+    --accent: #d4a94e;
+    --accent-dim: #7a6636;
+    --ok: #6fbf8b;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Inter', sans-serif;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    background-image:
+      radial-gradient(ellipse 80% 50% at 50% -10%, rgba(212,169,78,0.08), transparent);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .wrap {
+    max-width: 780px;
+    margin: 0 auto;
+    padding: 0 24px;
+    position: relative;
+    z-index: 1;
+  }
+
+  .mono {
+    font-family: 'IBM Plex Mono', monospace;
+  }
+
+  /* ---- Status bar ---- */
+  .statusbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 22px 0;
+    border-bottom: 1px solid var(--border);
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 12.5px;
+    letter-spacing: 0.06em;
+    color: var(--text-muted);
+  }
+
+  .statusbar .sys {
+    color: var(--text);
+  }
+
+  .pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    padding: 5px 12px;
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    color: var(--ok);
+  }
+
+  .pill .dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--ok);
+    box-shadow: 0 0 8px var(--ok);
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .pill .dot { animation: pulse 2.2s ease-in-out infinite; }
+  }
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.35; }
+  }
+
+  /* ---- Hero ---- */
+  .hero {
+    padding: 64px 0 48px;
+  }
+
+  .eyebrow {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 12px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 18px;
+  }
+
+  h1 {
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 600;
+    font-size: clamp(32px, 6vw, 46px);
+    line-height: 1.15;
+    letter-spacing: -0.01em;
+    max-width: 14ch;
+  }
+
+  .lede {
+    margin-top: 20px;
+    max-width: 52ch;
+    color: var(--text-muted);
+    font-size: 16.5px;
+  }
+
+  .lede strong {
+    color: var(--text);
+    font-weight: 500;
+  }
+
+  /* ---- Section labels ---- */
+  .section {
+    padding: 40px 0;
+    border-top: 1px solid var(--border);
+  }
+
+  .section-label {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 12px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    margin-bottom: 24px;
+  }
+
+  /* ---- Modules grid ---- */
+  .grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+  }
+
+  @media (max-width: 640px) {
+    .grid { grid-template-columns: 1fr; }
+  }
+
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 22px;
+    transition: border-color 0.15s ease;
+  }
+
+  .card:hover,
+  .card:focus-within {
+    border-color: var(--accent-dim);
+  }
+
+  .card .tag {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    color: var(--accent);
+    margin-bottom: 10px;
+  }
+
+  .card h3 {
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 600;
+    font-size: 18px;
+    margin-bottom: 8px;
+  }
+
+  .card p {
+    font-size: 14px;
+    color: var(--text-muted);
+  }
+
+  /* ---- Terminal / connect block ---- */
+  .terminal {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    overflow: hidden;
+  }
+
+  .terminal-head {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    padding: 12px 16px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .terminal-head span {
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+    background: var(--border);
+  }
+
+  .terminal-body {
+    padding: 20px 22px 24px;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 14.5px;
+  }
+
+  .term-line {
+    display: flex;
+    gap: 12px;
+    padding: 9px 0;
+    border-bottom: 1px dashed var(--border);
+  }
+  .term-line:last-child { border-bottom: none; }
+
+  .term-line .prompt { color: var(--accent-dim); flex-shrink: 0; }
+  .term-line .key { color: var(--text-muted); min-width: 84px; flex-shrink: 0; }
+  .term-line a {
+    color: var(--text);
+    text-decoration: none;
+    border-bottom: 1px solid var(--accent-dim);
+  }
+  .term-line a:hover { border-bottom-color: var(--accent); color: var(--accent); }
+
+  .cursor {
+    display: inline-block;
+    width: 8px;
+    height: 15px;
+    background: var(--accent);
+    margin-left: 8px;
+    vertical-align: text-bottom;
+  }
+  @media (prefers-reduced-motion: no-preference) {
+    .cursor { animation: blink 1.1s steps(1) infinite; }
+  }
+  @keyframes blink { 50% { opacity: 0; } }
+
+  /* ---- Footer ---- */
+  footer {
+    padding: 36px 0 56px;
+    border-top: 1px solid var(--border);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 10px;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 12px;
+    color: var(--text-muted);
+  }
+
+  a { color: inherit; }
+
+  ::selection {
+    background: var(--accent-dim);
+    color: var(--text);
+  }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+
+  <div class="statusbar">
+    <span class="sys">SYSTEM: <span style="color:var(--accent)">TITANSEC</span></span>
+    <span class="pill"><span class="dot"></span>OPERATIONAL</span>
+  </div>
+
+  <section class="hero">
+    <div class="eyebrow">Founder, TitanSEC — est. 2022</div>
+    <h1>Multiple income engines. One operator.</h1>
+    <p class="lede">
+      I'm <strong>Victory</strong>, operating under <strong>TitanSEC</strong> — a security-education
+      and fintech brand I built from the ground up. I run four active lanes at once: forex trading,
+      affiliate marketing, cybersecurity, and applied automation. Everything here is real, ongoing work —
+      not a resume.
+    </p>
+  </section>
+
+  <section class="section">
+    <div class="section-label">// Active Domains</div>
+    <div class="grid">
+
+      <div class="card">
+        <div class="tag">[ FX ]</div>
+        <h3>Trading</h3>
+        <p>Manual and automated forex trading, including proprietary bot systems (Gold Phantom Bots) and prop-firm evaluations.</p>
+      </div>
+
+      <div class="card">
+        <div class="tag">[ AFFILIATE ]</div>
+        <h3>CPA Marketing</h3>
+        <p>Performance-based partnerships with regulated forex brokers across multiple markets.</p>
+      </div>
+
+      <div class="card">
+        <div class="tag">[ CYSEC ]</div>
+        <h3>Cybersecurity</h3>
+        <p>CompTIA CySA+ certified. Building toward Web3 and smart-contract security, documented in public as I go.</p>
+      </div>
+
+      <div class="card">
+        <div class="tag">[ OPS ]</div>
+        <h3>Automation</h3>
+        <p>Applying AI as a multiplier across every lane — from trading infrastructure to workflow tooling.</p>
+      </div>
+
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="section-label">// Connect</div>
+    <div class="terminal">
+      <div class="terminal-head">
+        <span></span><span></span><span></span>
+      </div>
+      <div class="terminal-body">
+        <div class="term-line">
+          <span class="prompt">$</span>
+          <span class="key">whatsapp</span>
+          <a href="https://wa.me/2349054753642" target="_blank" rel="noopener">+234 905 475 3642</a>
+        </div>
+        <div class="term-line">
+          <span class="prompt">$</span>
+          <span class="key">x / twitter</span>
+          <a href="https://x.com/Titansec_10" target="_blank" rel="noopener">@Titansec_10</a>
+        </div>
+        <div class="term-line">
+          <span class="prompt">$</span>
+          <span class="key">telegram</span>
+          <a href="https://t.me/Titan_d_trader" target="_blank" rel="noopener">Titan_d_trader</a>
+        </div>
+        <div class="term-line">
+          <span class="prompt">$</span>
+          <span class="key">status</span>
+          <span>building in public<span class="cursor"></span></span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <span>TitanSEC — est. Nov 2022</span>
+    <span>Faceless by design. Real by output.</span>
+  </footer>
+
+</div>
+
+</body>
+</html>
